@@ -306,9 +306,12 @@
             <div class="certify-text"><span>THIS IS TO CERTIFY THAT</span></div>
             <div class="student-name">{{ $student->full_name }}</div>
             <div class="desc-text">
+                @if(($template?->show_department ?? true) && $student->department)
+                    of <span class="desc-highlight">{{ $student->department }}</span>
+                @endif
                 has successfully completed the <span class="desc-highlight">"{{ $cert->internship_title ?: $course?->name }}"</span><br>
                 organized by <strong>Syscom InfoTech</strong> during the period<br>
-                <span class="desc-highlight">{{ $cert->issue_date?->format('jS F Y') }} to {{ $cert->completion_date?->format('jS F Y') }}</span>.<br>
+                <span class="desc-highlight">{{ $student->batch?->start_date?->format('jS F Y') ?? $cert->issue_date?->format('jS F Y') }} to {{ $student->batch?->end_date?->format('jS F Y') ?? $cert->completion_date?->format('jS F Y') }}</span>.<br>
                 During this internship, the candidate has demonstrated dedication, hard work,<br>
                 and a strong commitment to learning.
             </div>

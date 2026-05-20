@@ -33,9 +33,10 @@
             <div class="col-12">
                 <hr>
                 <div class="row">
-                    <div class="col-md-4"><strong class="text-muted d-block">Qualification</strong>{{ $internship_student->educational_qualification ?? '—' }}</div>
-                    <div class="col-md-4"><strong class="text-muted d-block">College</strong>{{ $internship_student->college_name ?? '—' }}</div>
-                    <div class="col-md-4"><strong class="text-muted d-block">City / State</strong>{{ $internship_student->city ?? '—' }}{{ $internship_student->state ? ', '.$internship_student->state : '' }}</div>
+                    <div class="col-md-3"><strong class="text-muted d-block">Qualification</strong>{{ $internship_student->educational_qualification ?? '—' }}</div>
+                    <div class="col-md-3"><strong class="text-muted d-block">Department</strong>{{ $internship_student->department ?? '—' }}</div>
+                    <div class="col-md-3"><strong class="text-muted d-block">College</strong>{{ $internship_student->college_name ?? '—' }}</div>
+                    <div class="col-md-3"><strong class="text-muted d-block">City / State</strong>{{ $internship_student->city ?? '—' }}{{ $internship_student->state ? ', '.$internship_student->state : '' }}</div>
                     @if($internship_student->address)
                     <div class="col-12 mt-2"><strong class="text-muted d-block">Address</strong>{{ $internship_student->address }}</div>
                     @endif

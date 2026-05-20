@@ -57,6 +57,7 @@ class InternshipCertificateController extends Controller
             'is_active' => ['nullable'],
             'show_program_coordinator' => ['nullable'],
             'show_certificate_id' => ['nullable'],
+            'show_department' => ['nullable'],
             'left_signature_name' => ['nullable', 'string', 'max:255'],
             'right_signature_name' => ['nullable', 'string', 'max:255'],
             'show_left_signature_name' => ['nullable'],
@@ -66,6 +67,7 @@ class InternshipCertificateController extends Controller
         $data['is_active'] = $request->boolean('is_active');
         $data['show_program_coordinator'] = $request->boolean('show_program_coordinator');
         $data['show_certificate_id'] = $request->boolean('show_certificate_id');
+        $data['show_department'] = $request->boolean('show_department');
         $data['show_left_signature_name'] = $request->boolean('show_left_signature_name');
         $data['show_right_signature_name'] = $request->boolean('show_right_signature_name');
 
@@ -106,6 +108,7 @@ class InternshipCertificateController extends Controller
             'is_active' => ['nullable'],
             'show_program_coordinator' => ['nullable'],
             'show_certificate_id' => ['nullable'],
+            'show_department' => ['nullable'],
             'left_signature_name' => ['nullable', 'string', 'max:255'],
             'right_signature_name' => ['nullable', 'string', 'max:255'],
             'show_left_signature_name' => ['nullable'],
@@ -115,6 +118,7 @@ class InternshipCertificateController extends Controller
         $data['is_active'] = $request->boolean('is_active');
         $data['show_program_coordinator'] = $request->boolean('show_program_coordinator');
         $data['show_certificate_id'] = $request->boolean('show_certificate_id');
+        $data['show_department'] = $request->boolean('show_department');
         $data['show_left_signature_name'] = $request->boolean('show_left_signature_name');
         $data['show_right_signature_name'] = $request->boolean('show_right_signature_name');
 

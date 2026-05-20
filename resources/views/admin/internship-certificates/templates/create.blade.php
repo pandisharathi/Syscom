@@ -79,6 +79,10 @@
                 <label class="form-check-label" for="showCertIdCheck">Show Certificate ID</label>
             </div>
             <div class="form-check form-switch mb-2">
+                <input type="checkbox" name="show_department" class="form-check-input" value="1" checked id="showDeptCheck">
+                <label class="form-check-label" for="showDeptCheck">Show Department</label>
+            </div>
+            <div class="form-check form-switch mb-2">
                 <input type="checkbox" name="show_left_signature_name" class="form-check-input" value="1" checked id="showLeftNameCheck">
                 <label class="form-check-label" for="showLeftNameCheck">Show Left Signature Printed Name</label>
             </div>

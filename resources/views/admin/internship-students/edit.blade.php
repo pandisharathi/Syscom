@@ -97,6 +97,10 @@
                     <input type="text" name="educational_qualification" class="form-control" value="{{ $internship_student->educational_qualification }}">
                 </div>
                 <div class="col-md-4">
+                    <label class="form-label">Department</label>
+                    <input type="text" name="department" class="form-control" value="{{ $internship_student->department }}">
+                </div>
+                <div class="col-md-4">
                     <label class="form-label">College Name</label>
                     <input type="text" name="college_name" class="form-control" value="{{ $internship_student->college_name }}">
                 </div>

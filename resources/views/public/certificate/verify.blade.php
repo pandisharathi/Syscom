@@ -137,7 +137,7 @@
     </style>
 </head>
 <body>
-    @php $template = $cert->template; @endphp
+    @php $template = $cert->template; $student = $cert->student; @endphp
     <div class="verify-card">
         <div class="status-banner">
             <i class="fa-solid fa-circle-check me-2"></i> Certificate Authenticity Verified
@@ -190,11 +190,14 @@
                 <h1 class="title-main">CERTIFICATE</h1>
                 <div class="title-sub">OF INTERNSHIP</div>
                 <div class="certify-text"><span>THIS IS TO CERTIFY THAT</span></div>
-                <div class="student-name">{{ $cert->student->full_name }}</div>
+                <div class="student-name">{{ $student->full_name }}</div>
                 <div class="desc-text">
-                    has successfully completed the <span class="desc-highlight">"{{ $cert->internship_title ?: $cert->student->batch?->course?->name }}"</span><br>
+                    @if(($template?->show_department ?? true) && $student->department)
+                        of <span class="desc-highlight">{{ $student->department }}</span>
+                    @endif
+                    has successfully completed the <span class="desc-highlight">"{{ $cert->internship_title ?: $student->batch?->course?->name }}"</span><br>
                     organized by <strong>Syscom InfoTech</strong> during the period<br>
-                    <span class="desc-highlight">{{ $cert->issue_date?->format('jS F Y') }} to {{ $cert->completion_date?->format('jS F Y') }}</span>.
+                    <span class="desc-highlight">{{ $student->batch?->start_date?->format('jS F Y') ?? $cert->issue_date?->format('jS F Y') }} to {{ $student->batch?->end_date?->format('jS F Y') ?? $cert->completion_date?->format('jS F Y') }}</span>.
                 </div>
                 
                 <div class="divider-wish-wrap">

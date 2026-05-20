@@ -79,15 +79,19 @@
                 <div class="col-12 mt-2">
                     <h6 class="fw-semibold text-muted border-bottom pb-2">Academic & Enrollment</h6>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Educational Qualification</label>
                     <input type="text" name="educational_qualification" class="form-control" placeholder="e.g. B.Sc Computer Science">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <label class="form-label">Department</label>
+                    <input type="text" name="department" class="form-control" placeholder="e.g. Computer Science">
+                </div>
+                <div class="col-md-3">
                     <label class="form-label">College Name</label>
                     <input type="text" name="college_name" class="form-control">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Reg No</label>
                     <input type="text" name="reg_no" class="form-control" placeholder="e.g. REG-001">
                 </div>
