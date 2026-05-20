@@ -1,0 +1,93 @@
+==========================================
+INSTRUCTIONS — Internship Module
+==========================================
+
+== LOCAL DEVELOPMENT (Laravel artisan serve) ==
+
+Base URL: http://127.0.0.1:8000
+
+== PRODUCTION / DEPLOYED URL ==
+
+Replace http://127.0.0.1:8000 with your domain, e.g.:
+  https://yourdomain.com
+
+==========================================
+== LOGIN DETAILS ==
+==========================================
+
+Super Admin (full access to everything):
+  URL: http://127.0.0.1:8000/login
+  Email: superadmin@syscom.test
+  Password: password
+  Note: Creates/manages institutions. Cannot be assigned to a specific institution.
+
+Institution Admin (manages daily operations):
+  URL: http://127.0.0.1:8000/login
+  Email: admin@demo.edu
+  Password: password
+  Note: Has all permissions except Roles & Permissions and Institutions management.
+
+Faculty:
+  URL: http://127.0.0.1:8000/login
+  Email: faculty@demo.edu
+  Password: password
+  Note: Limited to attendance marking, reports, and student viewing.
+
+==========================================
+== PUBLIC FORMS (No Login Required) ==
+==========================================
+
+Internship Student Registration:
+  http://127.0.0.1:8000/internship-register/DEMO001
+
+  Fields: First Name, Last Name, Email, DOB, Gender, Qualification, College,
+  Contact Number, WhatsApp, City, State, Course Selection, Preferred Timing, Message.
+  Submissions appear as "New Enquiries" in the admin panel.
+
+Internship Enquiry Form (alternative, includes resume upload):
+  http://127.0.0.1:8000/internship-enquiry/DEMO001
+
+==========================================
+== AVAILABLE INSTITUTION CODES ==
+==========================================
+
+Use these codes in the public URLs (replace DEMO001 with your code):
+
+  DEMO001  — Demo Institution
+  (Add more institutions via the admin panel)
+
+To find your institution code, run: php artisan tinker
+  > \App\Models\Institution::pluck('code');
+
+==========================================
+== ADMIN PANEL (Login Required) ==
+==========================================
+
+Dashboard:             http://127.0.0.1:8000/admin/dashboard
+Internship Courses:    http://127.0.0.1:8000/admin/internship-courses
+Internship Batches:    http://127.0.0.1:8000/admin/internship-batches
+Internship Students:   http://127.0.0.1:8000/admin/internship-students
+Internship Enquiries:  http://127.0.0.1:8000/admin/internship-enquiries
+Internship Attendance: http://127.0.0.1:8000/admin/internship-attendances
+Internship Reports:    http://127.0.0.1:8000/admin/internship-reports
+
+==========================================
+== SEED DATA ==
+==========================================
+
+Run after fresh database to populate sample data:
+
+  php artisan db:seed --class=RbacSeeder
+
+Creates: 2 institutions, 3 users, 3 internship courses, 2 internship batches,
+5 sample internship students, permissions, menus, and expense types.
+
+==========================================
+== USEFUL ARTISAN COMMANDS ==
+==========================================
+
+Start dev server:    php artisan serve
+Clear route cache:   php artisan route:clear
+Run migrations:      php artisan migrate
+Run all seeders:     php artisan db:seed
+Storage link:        php artisan storage:link
