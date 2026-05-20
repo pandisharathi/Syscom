@@ -631,41 +631,102 @@
         }
     </style>
 
-    <!-- dom-to-image for Superior SVG handling -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <!-- dom-to-image-more: Best SVG + Font rendering for image export -->
+    <script src="https://cdn.jsdelivr.net/npm/dom-to-image-more@3/dist/dom-to-image-more.min.js"></script>
     <script>
-        function downloadCertificateImage(format) {
-            const certElement = document.getElementById('certContainerMain');
-            const fileName = 'Certificate-{{ $cert->certificate_number }}';
-            
-            // Dom-to-image is better for SVGs and Absolute positioning
-            const options = {
-                width: 1122,
-                height: 793,
-                style: {
-                    transform: 'none',
-                    margin: '0',
-                    left: '0',
-                    top: '0'
+        // Convert a Blob to a base64 data URI
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        // Fetch Google Fonts CSS, download each font binary, and return
+        // a <style> string with all @font-face rules using base64 data URIs
+        async function inlineGoogleFonts() {
+            const cssUrl =
+                'https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600;700;900&display=swap';
+
+            const cssResp = await fetch(cssUrl);
+            let cssText  = await cssResp.text();
+
+            // Collect every url(https://…) in the CSS
+            const urlRe   = /url\((https:\/\/[^)]+)\)/g;
+            const matches = [...cssText.matchAll(urlRe)];
+
+            // Replace each remote URL with an inline base64 data URI
+            for (const m of matches) {
+                try {
+                    const fontResp = await fetch(m[1]);
+                    const fontBlob = await fontResp.blob();
+                    const b64      = await blobToBase64(fontBlob);
+                    cssText = cssText.replace(m[0], `url(${b64})`);
+                } catch (e) {
+                    console.warn('Font inline skipped:', m[1], e);
                 }
-            };
+            }
+            return cssText;
+        }
 
-            const downloadFn = format === 'png' ? domtoimage.toPng : domtoimage.toJpeg;
+        async function downloadCertificateImage(format) {
+            const certElement = document.getElementById('certContainerMain');
+            const fileName    = 'Certificate-{{ $cert->certificate_number }}';
 
-            downloadFn(certElement, options)
-                .then(dataUrl => {
-                    const link = document.createElement('a');
-                    link.download = `${fileName}.${format}`;
-                    link.href = dataUrl;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                })
-                .catch(err => {
-                    console.error("Image capture failed:", err);
-                    alert("Image export failed. Falling back to high-resolution snapshot...");
-                    // Fallback to html2canvas if dom-to-image fails (some browsers)
-                });
+            // Show a brief "Preparing…" cursor so the user knows work is happening
+            document.body.style.cursor = 'wait';
+
+            try {
+                // 1. Wait for document fonts to finish loading
+                await document.fonts.ready;
+
+                // 2. Inline Google Fonts as base64 inside the capture target
+                const fontCss = await inlineGoogleFonts();
+                const styleEl = document.createElement('style');
+                styleEl.textContent = fontCss;
+                certElement.prepend(styleEl);
+
+                // 3. Render at 3× resolution for ultra-sharp output
+                const scale = 3;
+                const opts  = {
+                    width:  1122 * scale,
+                    height: 793  * scale,
+                    style: {
+                        transform:       `scale(${scale})`,
+                        transformOrigin: 'top left',
+                        width:           '1122px',
+                        height:          '793px'
+                    }
+                };
+
+                if (format === 'jpg') {
+                    opts.quality = 0.95;
+                }
+
+                const captureFn = format === 'png'
+                    ? domtoimage.toPng
+                    : domtoimage.toJpeg;
+
+                const dataUrl = await captureFn(certElement, opts);
+
+                // 4. Trigger the download
+                const link  = document.createElement('a');
+                link.download = `${fileName}.${format}`;
+                link.href     = dataUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // 5. Remove the injected font style
+                styleEl.remove();
+            } catch (err) {
+                console.error('Image capture failed:', err);
+                alert('Export failed. Please use the PDF download instead.');
+            } finally {
+                document.body.style.cursor = '';
+            }
         }
     </script>
 @endsection
