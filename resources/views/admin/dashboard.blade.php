@@ -110,15 +110,6 @@
             </div>
         </div>
     </div>
-    <div class="col-md-2">
-        <div class="card stat-card" style="background: linear-gradient(135deg,#f59e0b,#d97706);">
-            <div class="card-body position-relative">
-                <div class="small text-white-50">Pending</div>
-                <div class="h5 fw-bold mt-1" id="cardPayPending">—</div>
-                <i class="fa-solid fa-clock-rotate-left icon-bg"></i>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="row g-3 mb-4">

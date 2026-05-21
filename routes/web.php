@@ -22,6 +22,10 @@ use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\InvoiceReportController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PublicInternshipEnquiryController;
 use App\Http\Controllers\PublicInternshipRegistrationController;
@@ -256,6 +260,39 @@ Route::middleware('auth')->group(function () {
 
             Route::get('internship-certificates/verification-logs', [InternshipCertificateController::class, 'verificationLogs'])->name('internship-certificates.verification-logs');
             Route::get('internship-certificates/verification-logs/data', [InternshipCertificateController::class, 'verificationLogsData'])->name('internship-certificates.verification-logs-data');
+        });
+
+        // Invoice Management Module
+        Route::middleware(['permission:customers.manage'])->group(function () {
+            Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
+            Route::get('customers/data', [CustomerController::class, 'data'])->name('customers.data');
+            Route::post('customers', [CustomerController::class, 'store'])->name('customers.store');
+            Route::put('customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+            Route::delete('customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+        });
+
+        Route::middleware(['permission:suppliers.manage'])->group(function () {
+            Route::get('suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+            Route::get('suppliers/data', [SupplierController::class, 'data'])->name('suppliers.data');
+            Route::post('suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
+            Route::put('suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
+            Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+        });
+
+        Route::middleware(['permission:invoices.manage'])->group(function () {
+            Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+            Route::get('invoices/data', [InvoiceController::class, 'data'])->name('invoices.data');
+            Route::get('invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+            Route::post('invoices', [InvoiceController::class, 'store'])->name('invoices.store');
+            Route::get('invoices/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
+            Route::put('invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
+            Route::delete('invoices/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
+            Route::get('invoices/{invoice}/print', [InvoiceController::class, 'print'])->name('invoices.print');
+        });
+
+        Route::middleware(['permission:invoices.reports'])->group(function () {
+            Route::get('invoice-reports', [InvoiceReportController::class, 'index'])->name('invoice-reports.index');
+            Route::get('invoice-reports/data', [InvoiceReportController::class, 'data'])->name('invoice-reports.data');
         });
     });
 });
