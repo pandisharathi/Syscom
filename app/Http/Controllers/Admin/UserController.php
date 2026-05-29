@@ -21,10 +21,21 @@ class UserController extends Controller
 
     public function __construct(private ActivityLogService $activityLog) {}
 
-    public function index(): View
+    public function index(\Illuminate\Http\Request $request): View
     {
+        $rolesQuery = Role::query()->orderBy('name');
+        if (! $request->user()->isSuperAdmin()) {
+            $rolesQuery->whereNotIn('slug', [User::ROLE_SUPER_ADMIN, 'admin']);
+        }
+
+        $institutions = [];
+        if ($request->user()->isSuperAdmin()) {
+            $institutions = \App\Models\Institution::query()->orderBy('name')->get();
+        }
+
         return view('admin.users.index', [
-            'roles' => Role::query()->orderBy('name')->get(),
+            'roles' => $rolesQuery->get(),
+            'institutions' => $institutions,
         ]);
     }
 
@@ -93,6 +104,25 @@ class UserController extends Controller
         $this->activityLog->log('user.deleted', $user);
 
         return response()->json(['message' => 'Deleted']);
+    }
+
+    public function resetPassword(Request $request, User $user): JsonResponse
+    {
+        if (! $request->user()->isSuperAdmin()) {
+            abort(403, 'Only Super Admin can reset passwords.');
+        }
+
+        $data = $request->validate([
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+
+        $user->update([
+            'password' => Hash::make($data['password']),
+        ]);
+        
+        $this->activityLog->log('user.password_reset', $user);
+
+        return response()->json(['message' => 'Password reset successfully']);
     }
 
     private function validated(Request $request, ?int $userId = null, bool $isCreate = false): array

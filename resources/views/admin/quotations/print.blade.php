@@ -36,8 +36,22 @@
                 <p>Status: {{ ucfirst($quotation->status) }}</p>
             </div>
             <div class="company">
-                <h2 style="margin:0;">{{ config('app.name') }}</h2>
-                <p style="margin:5px 0 0 0; color:#555;">{{ $quotation->institution->name ?? '' }}</p>
+                @if($quotation->institution)
+                    <h2 style="margin:0;">{{ $quotation->institution->name }}</h2>
+                    @if($quotation->institution->address)
+                        <p style="margin:5px 0 0 0; color:#555; line-height: 1.4;">{!! nl2br(e($quotation->institution->address)) !!}</p>
+                    @endif
+                    <p style="margin:5px 0 0 0; color:#555; line-height: 1.4;">
+                        @if($quotation->institution->email)
+                            Email: {{ $quotation->institution->email }}<br>
+                        @endif
+                        @if($quotation->institution->phone)
+                            Phone: {{ $quotation->institution->phone }}
+                        @endif
+                    </p>
+                @else
+                    <h2 style="margin:0;">{{ config('app.name') }}</h2>
+                @endif
             </div>
         </div>
 

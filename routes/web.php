@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile.index');
+        Route::put('profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
+
         Route::get('dashboard', [DashboardController::class, 'index'])->middleware('permission:dashboard.view')->name('dashboard');
         Route::get('dashboard/charts', [DashboardController::class, 'charts'])->middleware('permission:dashboard.view')->name('dashboard.charts');
 
@@ -127,6 +130,7 @@ Route::middleware('auth')->group(function () {
             Route::get('users/data', [UserController::class, 'data'])->name('users.data');
             Route::post('users', [UserController::class, 'store'])->name('users.store');
             Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
+            Route::put('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
             Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
         });
 

@@ -66,8 +66,22 @@
                 <span class="badge {{ $statusClass }} fs-6">{{ ucfirst($quotation->status) }}</span>
             </div>
             <div class="col-sm-6 text-sm-end">
-                <h4 class="mb-0">{{ config('app.name') }}</h4>
-                <div class="text-muted">{{ $quotation->institution->name ?? '' }}</div>
+                @if($quotation->institution)
+                    <h4 class="mb-1">{{ $quotation->institution->name }}</h4>
+                    @if($quotation->institution->address)
+                        <div class="text-muted small mb-1">{!! nl2br(e($quotation->institution->address)) !!}</div>
+                    @endif
+                    <div class="text-muted small">
+                        @if($quotation->institution->email)
+                            Email: {{ $quotation->institution->email }}<br>
+                        @endif
+                        @if($quotation->institution->phone)
+                            Phone: {{ $quotation->institution->phone }}
+                        @endif
+                    </div>
+                @else
+                    <h4 class="mb-0">{{ config('app.name') }}</h4>
+                @endif
             </div>
         </div>
 

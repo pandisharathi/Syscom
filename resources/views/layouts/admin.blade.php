@@ -162,11 +162,36 @@
         </div>
         <div class="d-flex align-items-center gap-3">
             @auth
-                <span class="text-muted small">{{ auth()->user()->email }}</span>
-                <form method="post" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="btn btn-outline-secondary btn-sm" type="submit">Logout</button>
-                </form>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="text-muted small me-2">{{ auth()->user()->name }}</span>
+                        <i class="fa-solid fa-circle-user fs-4 text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="profileDropdown">
+                        @if(auth()->user()->hasPermission('settings.manage'))
+                        <li>
+                            <a class="dropdown-item" href="{{ route('admin.settings.index') }}">
+                                <i class="fa-solid fa-building me-2"></i> Company Profile
+                            </a>
+                        </li>
+                        @else
+                        <li>
+                            <a class="dropdown-item" href="{{ route('admin.profile.index') }}">
+                                <i class="fa-solid fa-user me-2"></i> My Profile
+                            </a>
+                        </li>
+                        @endif
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="dropdown-item text-danger" type="submit">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             @endauth
         </div>
     </header>
