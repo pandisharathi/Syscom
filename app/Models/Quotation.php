@@ -6,33 +6,33 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Invoice extends Model
+class Quotation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'institution_id',
-        'invoice_number',
-        'type',
+        'quotation_number',
         'customer_id',
-        'supplier_id',
-        'quotation_id',
-        'invoice_date',
-        'due_date',
-        'description',
+        'quotation_date',
+        'expiry_date',
         'subtotal',
+        'discount',
         'tax',
         'total_amount',
+        'terms_conditions',
         'notes',
         'status',
         'authorized_signatory',
     ];
 
     protected $casts = [
-        'invoice_date' => 'date',
-        'due_date' => 'date',
+        'quotation_date' => 'date',
+        'expiry_date' => 'date',
         'subtotal' => 'decimal:2',
+        'discount' => 'decimal:2',
         'tax' => 'decimal:2',
         'total_amount' => 'decimal:2',
     ];
@@ -47,18 +47,13 @@ class Invoice extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function supplier(): BelongsTo
-    {
-        return $this->belongsTo(Supplier::class);
-    }
-
     public function items(): HasMany
     {
-        return $this->hasMany(InvoiceItem::class);
+        return $this->hasMany(QuotationItem::class);
     }
 
-    public function quotation(): BelongsTo
+    public function invoice(): HasOne
     {
-        return $this->belongsTo(Quotation::class);
+        return $this->hasOne(Invoice::class);
     }
 }

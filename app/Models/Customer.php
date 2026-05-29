@@ -27,4 +27,9 @@ class Customer extends Model
     {
         return $this->belongsTo(Institution::class);
     }
+
+    public function quotations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Quotation::class);
+    }
 }

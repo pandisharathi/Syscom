@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\InvoiceReportController;
+use App\Http\Controllers\Admin\QuotationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PublicInternshipEnquiryController;
 use App\Http\Controllers\PublicInternshipRegistrationController;
@@ -293,6 +294,24 @@ Route::middleware('auth')->group(function () {
         Route::middleware(['permission:invoices.reports'])->group(function () {
             Route::get('invoice-reports', [InvoiceReportController::class, 'index'])->name('invoice-reports.index');
             Route::get('invoice-reports/data', [InvoiceReportController::class, 'data'])->name('invoice-reports.data');
+        });
+
+        // Quotation Management Module
+        Route::middleware(['permission:quotations.manage'])->group(function () {
+            Route::get('quotations', [QuotationController::class, 'index'])->name('quotations.index');
+            Route::get('quotations/data', [QuotationController::class, 'data'])->name('quotations.data');
+            Route::get('quotations/create', [QuotationController::class, 'create'])->name('quotations.create');
+            Route::post('quotations', [QuotationController::class, 'store'])->name('quotations.store');
+            Route::get('quotations/{quotation}', [QuotationController::class, 'show'])->name('quotations.show');
+            Route::get('quotations/{quotation}/edit', [QuotationController::class, 'edit'])->name('quotations.edit');
+            Route::put('quotations/{quotation}', [QuotationController::class, 'update'])->name('quotations.update');
+            Route::delete('quotations/{quotation}', [QuotationController::class, 'destroy'])->name('quotations.destroy');
+            Route::get('quotations/{quotation}/print', [QuotationController::class, 'print'])->name('quotations.print');
+            Route::get('quotations/{quotation}/pdf', [QuotationController::class, 'exportPdf'])->name('quotations.pdf');
+            Route::post('quotations/{quotation}/duplicate', [QuotationController::class, 'duplicate'])->name('quotations.duplicate');
+            Route::put('quotations/{quotation}/status', [QuotationController::class, 'updateStatus'])->name('quotations.status');
+            Route::post('quotations/{quotation}/convert', [QuotationController::class, 'convertToInvoice'])->name('quotations.convert');
+            Route::post('quotations/{quotation}/email', [QuotationController::class, 'sendEmail'])->name('quotations.email');
         });
     });
 });
