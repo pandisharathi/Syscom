@@ -123,7 +123,7 @@
                     @endif
                     has successfully completed the <span
                         class="desc-highlight">"{{ $cert->internship_title ?: $student->batch?->course?->name }}"</span><br>
-                    organized by <strong>Syscom InfoTech</strong> during the period<br>
+                    organized by <strong>Syscom Infotech</strong> during the period<br>
                     <span class="desc-highlight">{{ $student->batch?->start_date?->format('jS F Y') ?? $cert->issue_date?->format('jS F Y') }} to
                         {{ $student->batch?->end_date?->format('jS F Y') ?? $cert->completion_date?->format('jS F Y') }}</span>.<br>
                     During this internship, the candidate has demonstrated dedication, hard work,<br>

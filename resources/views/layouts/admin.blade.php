@@ -52,6 +52,7 @@
         .sidebar .nav-link:hover { background: #f3f4f6; color: #4f46e5; }
         .sidebar .nav-link.active { background: #eef2ff; color: #4f46e5; font-weight: 500; }
         .sidebar .small-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; font-weight: 600; padding: .75rem 1.25rem .35rem; }
+        .sidebar .small-label.active-label { color: #4f46e5; font-weight: 700; }
         .main-wrap {
             margin-left: var(--sidebar-w);
             min-height: 100vh;
@@ -124,17 +125,17 @@
     </div>
     @auth
         <div class="sidebar-scroll">
-            <nav class="nav flex-column">
+            <nav class="nav flex-column" id="sidebarNav">
                 @foreach($sidebarMenus ?? [] as $menu)
                     @if(!empty($menu['children']))
                         @php
                             $hasActive = collect($menu['children'])->contains(fn($c) => request()->url() === url($c['route']));
                         @endphp
-                        <div class="small-label d-flex align-items-center justify-content-between" style="cursor:pointer" data-bs-toggle="collapse" data-bs-target="#submenu-{{ $menu['id'] }}" aria-expanded="{{ $hasActive ? 'true' : 'false' }}">
+                        <div class="small-label d-flex align-items-center justify-content-between {{ $hasActive ? 'active-label' : '' }}" style="cursor:pointer" data-bs-toggle="collapse" data-bs-target="#submenu-{{ $menu['id'] }}" aria-expanded="{{ $hasActive ? 'true' : 'false' }}">
                             <span>{{ $menu['name'] }}</span>
                             <i class="fa-solid fa-chevron-down submenu-icon {{ $hasActive ? 'open' : '' }}" style="font-size:.6rem;opacity:.5;transition:transform .2s"></i>
                         </div>
-                        <div class="collapse {{ $hasActive ? 'show' : '' }}" id="submenu-{{ $menu['id'] }}">
+                        <div class="collapse {{ $hasActive ? 'show' : '' }}" id="submenu-{{ $menu['id'] }}" data-bs-parent="#sidebarNav">
                             @foreach($menu['children'] as $child)
                                 <a class="nav-link {{ request()->url() === url($child['route']) ? 'active' : '' }}" href="{{ $child['route'] }}">
                                     <i class="fa-solid {{ $child['icon'] ?? 'fa-circle' }}"></i> {{ $child['name'] }}
@@ -290,20 +291,32 @@
         restoreDesktopCollapsed();
         if (!isDesktop()) applyAria();
 
-        document.querySelectorAll('.small-label[data-bs-toggle="collapse"]').forEach(function(label){
-            label.addEventListener('click', function(){
-                const icon = this.querySelector('.submenu-icon');
-                if(icon) icon.classList.toggle('open');
-            });
-            const targetId = label.getAttribute('data-bs-target');
-            if(targetId){
-                const target = document.querySelector(targetId);
-                if(target && !target.classList.contains('show')){
+        document.addEventListener('show.bs.collapse', function(e){
+            if (e.target.id && e.target.id.startsWith('submenu-')) {
+                const label = document.querySelector(`[data-bs-target="#${e.target.id}"]`);
+                if(label) {
+                    const icon = label.querySelector('.submenu-icon');
+                    if(icon) icon.classList.add('open');
+                }
+            }
+        });
+
+        document.addEventListener('hide.bs.collapse', function(e){
+            if (e.target.id && e.target.id.startsWith('submenu-')) {
+                const label = document.querySelector(`[data-bs-target="#${e.target.id}"]`);
+                if(label) {
                     const icon = label.querySelector('.submenu-icon');
                     if(icon) icon.classList.remove('open');
                 }
             }
         });
+
+        const activeLink = document.querySelector('.sidebar .nav-link.active');
+        if (activeLink) {
+            setTimeout(() => {
+                activeLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
     })();
 </script>
 @stack('scripts')
